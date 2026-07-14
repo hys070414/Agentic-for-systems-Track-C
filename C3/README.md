@@ -4,7 +4,7 @@
 
 ```
 C3/
-├── framework/            # 框架源码
+├── src/                  # 框架源码
 │   ├── benchmarks/
 │   ├── cli/
 │   ├── kernels/
@@ -20,11 +20,11 @@ C3/
 ### C3.1 计算图解析与表示
 
 ```bash
-python framework/cli/export_dag.py --onnx <model.onnx> --output <dag.json>
+python src/cli/export_dag.py --onnx <model.onnx> --output <dag.json>
 ```
 
 ### C3.5 模型推理
 
 ```bash
-python framework/cli/infer_worker.py
+python src/cli/infer_worker.py
 ```
