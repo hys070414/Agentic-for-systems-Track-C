@@ -1,0 +1,834 @@
+{
+  "format_version": "1.0",
+  "graph_inputs": [
+    {
+      "name": "input",
+      "dtype": "FLOAT",
+      "shape": [
+        "batch",
+        3,
+        32,
+        32
+      ]
+    }
+  ],
+  "graph_outputs": [
+    {
+      "name": "logits",
+      "dtype": "FLOAT",
+      "shape": [
+        "batch",
+        10
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "input",
+        "onnx::Conv_192",
+        "onnx::Conv_193"
+      ],
+      "outputs": [
+        "/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.0/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/relu/Relu_output_0",
+        "onnx::Conv_195",
+        "onnx::Conv_196"
+      ],
+      "outputs": [
+        "/layer1/layer1.0/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.0/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer1/layer1.0/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer1/layer1.0/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.0/conv2/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer1/layer1.0/relu/Relu_output_0",
+        "onnx::Conv_198",
+        "onnx::Conv_199"
+      ],
+      "outputs": [
+        "/layer1/layer1.0/conv2/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.0/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/layer1/layer1.0/conv2/Conv_output_0",
+        "/relu/Relu_output_0"
+      ],
+      "outputs": [
+        "/layer1/layer1.0/Add_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.0/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer1/layer1.0/Add_output_0"
+      ],
+      "outputs": [
+        "/layer1/layer1.0/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.1/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer1/layer1.0/relu_1/Relu_output_0",
+        "onnx::Conv_201",
+        "onnx::Conv_202"
+      ],
+      "outputs": [
+        "/layer1/layer1.1/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.1/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer1/layer1.1/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer1/layer1.1/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.1/conv2/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer1/layer1.1/relu/Relu_output_0",
+        "onnx::Conv_204",
+        "onnx::Conv_205"
+      ],
+      "outputs": [
+        "/layer1/layer1.1/conv2/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/layer1/layer1.1/conv2/Conv_output_0",
+        "/layer1/layer1.0/relu_1/Relu_output_0"
+      ],
+      "outputs": [
+        "/layer1/layer1.1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/layer1/layer1.1/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer1/layer1.1/Add_output_0"
+      ],
+      "outputs": [
+        "/layer1/layer1.1/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.0/downsample/downsample.0/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer1/layer1.1/relu_1/Relu_output_0",
+        "onnx::Conv_207",
+        "onnx::Conv_208"
+      ],
+      "outputs": [
+        "/layer2/layer2.0/downsample/downsample.0/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.0/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer1/layer1.1/relu_1/Relu_output_0",
+        "onnx::Conv_210",
+        "onnx::Conv_211"
+      ],
+      "outputs": [
+        "/layer2/layer2.0/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.0/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer2/layer2.0/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer2/layer2.0/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.0/conv2/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer2/layer2.0/relu/Relu_output_0",
+        "onnx::Conv_213",
+        "onnx::Conv_214"
+      ],
+      "outputs": [
+        "/layer2/layer2.0/conv2/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.0/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/layer2/layer2.0/conv2/Conv_output_0",
+        "/layer2/layer2.0/downsample/downsample.0/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer2/layer2.0/Add_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.0/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer2/layer2.0/Add_output_0"
+      ],
+      "outputs": [
+        "/layer2/layer2.0/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.1/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer2/layer2.0/relu_1/Relu_output_0",
+        "onnx::Conv_216",
+        "onnx::Conv_217"
+      ],
+      "outputs": [
+        "/layer2/layer2.1/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.1/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer2/layer2.1/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer2/layer2.1/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.1/conv2/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer2/layer2.1/relu/Relu_output_0",
+        "onnx::Conv_219",
+        "onnx::Conv_220"
+      ],
+      "outputs": [
+        "/layer2/layer2.1/conv2/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/layer2/layer2.1/conv2/Conv_output_0",
+        "/layer2/layer2.0/relu_1/Relu_output_0"
+      ],
+      "outputs": [
+        "/layer2/layer2.1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/layer2/layer2.1/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer2/layer2.1/Add_output_0"
+      ],
+      "outputs": [
+        "/layer2/layer2.1/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.0/downsample/downsample.0/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer2/layer2.1/relu_1/Relu_output_0",
+        "onnx::Conv_222",
+        "onnx::Conv_223"
+      ],
+      "outputs": [
+        "/layer3/layer3.0/downsample/downsample.0/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.0/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer2/layer2.1/relu_1/Relu_output_0",
+        "onnx::Conv_225",
+        "onnx::Conv_226"
+      ],
+      "outputs": [
+        "/layer3/layer3.0/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.0/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer3/layer3.0/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer3/layer3.0/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.0/conv2/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer3/layer3.0/relu/Relu_output_0",
+        "onnx::Conv_228",
+        "onnx::Conv_229"
+      ],
+      "outputs": [
+        "/layer3/layer3.0/conv2/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.0/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/layer3/layer3.0/conv2/Conv_output_0",
+        "/layer3/layer3.0/downsample/downsample.0/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer3/layer3.0/Add_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.0/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer3/layer3.0/Add_output_0"
+      ],
+      "outputs": [
+        "/layer3/layer3.0/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.1/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer3/layer3.0/relu_1/Relu_output_0",
+        "onnx::Conv_231",
+        "onnx::Conv_232"
+      ],
+      "outputs": [
+        "/layer3/layer3.1/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.1/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer3/layer3.1/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer3/layer3.1/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.1/conv2/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer3/layer3.1/relu/Relu_output_0",
+        "onnx::Conv_234",
+        "onnx::Conv_235"
+      ],
+      "outputs": [
+        "/layer3/layer3.1/conv2/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/layer3/layer3.1/conv2/Conv_output_0",
+        "/layer3/layer3.0/relu_1/Relu_output_0"
+      ],
+      "outputs": [
+        "/layer3/layer3.1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/layer3/layer3.1/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer3/layer3.1/Add_output_0"
+      ],
+      "outputs": [
+        "/layer3/layer3.1/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.0/downsample/downsample.0/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer3/layer3.1/relu_1/Relu_output_0",
+        "onnx::Conv_237",
+        "onnx::Conv_238"
+      ],
+      "outputs": [
+        "/layer4/layer4.0/downsample/downsample.0/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.0/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer3/layer3.1/relu_1/Relu_output_0",
+        "onnx::Conv_240",
+        "onnx::Conv_241"
+      ],
+      "outputs": [
+        "/layer4/layer4.0/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.0/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer4/layer4.0/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer4/layer4.0/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.0/conv2/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer4/layer4.0/relu/Relu_output_0",
+        "onnx::Conv_243",
+        "onnx::Conv_244"
+      ],
+      "outputs": [
+        "/layer4/layer4.0/conv2/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.0/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/layer4/layer4.0/conv2/Conv_output_0",
+        "/layer4/layer4.0/downsample/downsample.0/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer4/layer4.0/Add_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.0/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer4/layer4.0/Add_output_0"
+      ],
+      "outputs": [
+        "/layer4/layer4.0/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.1/conv1/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer4/layer4.0/relu_1/Relu_output_0",
+        "onnx::Conv_246",
+        "onnx::Conv_247"
+      ],
+      "outputs": [
+        "/layer4/layer4.1/conv1/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.1/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer4/layer4.1/conv1/Conv_output_0"
+      ],
+      "outputs": [
+        "/layer4/layer4.1/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.1/conv2/Conv",
+      "op_type": "Conv",
+      "inputs": [
+        "/layer4/layer4.1/relu/Relu_output_0",
+        "onnx::Conv_249",
+        "onnx::Conv_250"
+      ],
+      "outputs": [
+        "/layer4/layer4.1/conv2/Conv_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/layer4/layer4.1/conv2/Conv_output_0",
+        "/layer4/layer4.0/relu_1/Relu_output_0"
+      ],
+      "outputs": [
+        "/layer4/layer4.1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/layer4/layer4.1/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/layer4/layer4.1/Add_output_0"
+      ],
+      "outputs": [
+        "/layer4/layer4.1/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/avgpool/GlobalAveragePool",
+      "op_type": "GlobalAveragePool",
+      "inputs": [
+        "/layer4/layer4.1/relu_1/Relu_output_0"
+      ],
+      "outputs": [
+        "/avgpool/GlobalAveragePool_output_0"
+      ]
+    },
+    {
+      "name": "/flatten/Flatten",
+      "op_type": "Flatten",
+      "inputs": [
+        "/avgpool/GlobalAveragePool_output_0"
+      ],
+      "outputs": [
+        "/flatten/Flatten_output_0"
+      ]
+    },
+    {
+      "name": "/fc/Gemm",
+      "op_type": "Gemm",
+      "inputs": [
+        "/flatten/Flatten_output_0",
+        "fc.weight",
+        "fc.bias"
+      ],
+      "outputs": [
+        "logits"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "src_node": "/conv1/Conv",
+      "dst_node": "/relu/Relu",
+      "tensor": "/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/relu/Relu",
+      "dst_node": "/layer1/layer1.0/conv1/Conv",
+      "tensor": "/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.0/conv1/Conv",
+      "dst_node": "/layer1/layer1.0/relu/Relu",
+      "tensor": "/layer1/layer1.0/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.0/relu/Relu",
+      "dst_node": "/layer1/layer1.0/conv2/Conv",
+      "tensor": "/layer1/layer1.0/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.0/conv2/Conv",
+      "dst_node": "/layer1/layer1.0/Add",
+      "tensor": "/layer1/layer1.0/conv2/Conv_output_0"
+    },
+    {
+      "src_node": "/relu/Relu",
+      "dst_node": "/layer1/layer1.0/Add",
+      "tensor": "/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.0/Add",
+      "dst_node": "/layer1/layer1.0/relu_1/Relu",
+      "tensor": "/layer1/layer1.0/Add_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.0/relu_1/Relu",
+      "dst_node": "/layer1/layer1.1/conv1/Conv",
+      "tensor": "/layer1/layer1.0/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.1/conv1/Conv",
+      "dst_node": "/layer1/layer1.1/relu/Relu",
+      "tensor": "/layer1/layer1.1/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.1/relu/Relu",
+      "dst_node": "/layer1/layer1.1/conv2/Conv",
+      "tensor": "/layer1/layer1.1/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.1/conv2/Conv",
+      "dst_node": "/layer1/layer1.1/Add",
+      "tensor": "/layer1/layer1.1/conv2/Conv_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.0/relu_1/Relu",
+      "dst_node": "/layer1/layer1.1/Add",
+      "tensor": "/layer1/layer1.0/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.1/Add",
+      "dst_node": "/layer1/layer1.1/relu_1/Relu",
+      "tensor": "/layer1/layer1.1/Add_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.1/relu_1/Relu",
+      "dst_node": "/layer2/layer2.0/downsample/downsample.0/Conv",
+      "tensor": "/layer1/layer1.1/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer1/layer1.1/relu_1/Relu",
+      "dst_node": "/layer2/layer2.0/conv1/Conv",
+      "tensor": "/layer1/layer1.1/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.0/conv1/Conv",
+      "dst_node": "/layer2/layer2.0/relu/Relu",
+      "tensor": "/layer2/layer2.0/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.0/relu/Relu",
+      "dst_node": "/layer2/layer2.0/conv2/Conv",
+      "tensor": "/layer2/layer2.0/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.0/conv2/Conv",
+      "dst_node": "/layer2/layer2.0/Add",
+      "tensor": "/layer2/layer2.0/conv2/Conv_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.0/downsample/downsample.0/Conv",
+      "dst_node": "/layer2/layer2.0/Add",
+      "tensor": "/layer2/layer2.0/downsample/downsample.0/Conv_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.0/Add",
+      "dst_node": "/layer2/layer2.0/relu_1/Relu",
+      "tensor": "/layer2/layer2.0/Add_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.0/relu_1/Relu",
+      "dst_node": "/layer2/layer2.1/conv1/Conv",
+      "tensor": "/layer2/layer2.0/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.1/conv1/Conv",
+      "dst_node": "/layer2/layer2.1/relu/Relu",
+      "tensor": "/layer2/layer2.1/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.1/relu/Relu",
+      "dst_node": "/layer2/layer2.1/conv2/Conv",
+      "tensor": "/layer2/layer2.1/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.1/conv2/Conv",
+      "dst_node": "/layer2/layer2.1/Add",
+      "tensor": "/layer2/layer2.1/conv2/Conv_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.0/relu_1/Relu",
+      "dst_node": "/layer2/layer2.1/Add",
+      "tensor": "/layer2/layer2.0/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.1/Add",
+      "dst_node": "/layer2/layer2.1/relu_1/Relu",
+      "tensor": "/layer2/layer2.1/Add_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.1/relu_1/Relu",
+      "dst_node": "/layer3/layer3.0/downsample/downsample.0/Conv",
+      "tensor": "/layer2/layer2.1/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer2/layer2.1/relu_1/Relu",
+      "dst_node": "/layer3/layer3.0/conv1/Conv",
+      "tensor": "/layer2/layer2.1/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.0/conv1/Conv",
+      "dst_node": "/layer3/layer3.0/relu/Relu",
+      "tensor": "/layer3/layer3.0/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.0/relu/Relu",
+      "dst_node": "/layer3/layer3.0/conv2/Conv",
+      "tensor": "/layer3/layer3.0/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.0/conv2/Conv",
+      "dst_node": "/layer3/layer3.0/Add",
+      "tensor": "/layer3/layer3.0/conv2/Conv_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.0/downsample/downsample.0/Conv",
+      "dst_node": "/layer3/layer3.0/Add",
+      "tensor": "/layer3/layer3.0/downsample/downsample.0/Conv_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.0/Add",
+      "dst_node": "/layer3/layer3.0/relu_1/Relu",
+      "tensor": "/layer3/layer3.0/Add_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.0/relu_1/Relu",
+      "dst_node": "/layer3/layer3.1/conv1/Conv",
+      "tensor": "/layer3/layer3.0/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.1/conv1/Conv",
+      "dst_node": "/layer3/layer3.1/relu/Relu",
+      "tensor": "/layer3/layer3.1/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.1/relu/Relu",
+      "dst_node": "/layer3/layer3.1/conv2/Conv",
+      "tensor": "/layer3/layer3.1/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.1/conv2/Conv",
+      "dst_node": "/layer3/layer3.1/Add",
+      "tensor": "/layer3/layer3.1/conv2/Conv_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.0/relu_1/Relu",
+      "dst_node": "/layer3/layer3.1/Add",
+      "tensor": "/layer3/layer3.0/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.1/Add",
+      "dst_node": "/layer3/layer3.1/relu_1/Relu",
+      "tensor": "/layer3/layer3.1/Add_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.1/relu_1/Relu",
+      "dst_node": "/layer4/layer4.0/downsample/downsample.0/Conv",
+      "tensor": "/layer3/layer3.1/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer3/layer3.1/relu_1/Relu",
+      "dst_node": "/layer4/layer4.0/conv1/Conv",
+      "tensor": "/layer3/layer3.1/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.0/conv1/Conv",
+      "dst_node": "/layer4/layer4.0/relu/Relu",
+      "tensor": "/layer4/layer4.0/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.0/relu/Relu",
+      "dst_node": "/layer4/layer4.0/conv2/Conv",
+      "tensor": "/layer4/layer4.0/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.0/conv2/Conv",
+      "dst_node": "/layer4/layer4.0/Add",
+      "tensor": "/layer4/layer4.0/conv2/Conv_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.0/downsample/downsample.0/Conv",
+      "dst_node": "/layer4/layer4.0/Add",
+      "tensor": "/layer4/layer4.0/downsample/downsample.0/Conv_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.0/Add",
+      "dst_node": "/layer4/layer4.0/relu_1/Relu",
+      "tensor": "/layer4/layer4.0/Add_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.0/relu_1/Relu",
+      "dst_node": "/layer4/layer4.1/conv1/Conv",
+      "tensor": "/layer4/layer4.0/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.1/conv1/Conv",
+      "dst_node": "/layer4/layer4.1/relu/Relu",
+      "tensor": "/layer4/layer4.1/conv1/Conv_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.1/relu/Relu",
+      "dst_node": "/layer4/layer4.1/conv2/Conv",
+      "tensor": "/layer4/layer4.1/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.1/conv2/Conv",
+      "dst_node": "/layer4/layer4.1/Add",
+      "tensor": "/layer4/layer4.1/conv2/Conv_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.0/relu_1/Relu",
+      "dst_node": "/layer4/layer4.1/Add",
+      "tensor": "/layer4/layer4.0/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.1/Add",
+      "dst_node": "/layer4/layer4.1/relu_1/Relu",
+      "tensor": "/layer4/layer4.1/Add_output_0"
+    },
+    {
+      "src_node": "/layer4/layer4.1/relu_1/Relu",
+      "dst_node": "/avgpool/GlobalAveragePool",
+      "tensor": "/layer4/layer4.1/relu_1/Relu_output_0"
+    },
+    {
+      "src_node": "/avgpool/GlobalAveragePool",
+      "dst_node": "/flatten/Flatten",
+      "tensor": "/avgpool/GlobalAveragePool_output_0"
+    },
+    {
+      "src_node": "/flatten/Flatten",
+      "dst_node": "/fc/Gemm",
+      "tensor": "/flatten/Flatten_output_0"
+    }
+  ]
+}

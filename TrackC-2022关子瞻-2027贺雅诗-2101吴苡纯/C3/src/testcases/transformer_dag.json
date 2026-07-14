@@ -1,0 +1,2648 @@
+{
+  "format_version": "1.0",
+  "graph_inputs": [
+    {
+      "name": "input_ids",
+      "dtype": "INT64",
+      "shape": [
+        "batch",
+        18
+      ]
+    }
+  ],
+  "graph_outputs": [
+    {
+      "name": "logits",
+      "dtype": "FLOAT",
+      "shape": [
+        "batch",
+        18,
+        14
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "/tok_emb/Gather",
+      "op_type": "Gather",
+      "inputs": [
+        "tok_emb.weight",
+        "input_ids"
+      ],
+      "outputs": [
+        "/tok_emb/Gather_output_0"
+      ]
+    },
+    {
+      "name": "/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/tok_emb/Gather_output_0",
+        "pos_emb"
+      ],
+      "outputs": [
+        "/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/ln1/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/Add_output_0",
+        "blocks.0.ln1.weight",
+        "blocks.0.ln1.bias"
+      ],
+      "outputs": [
+        "/blocks.0/ln1/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/qkv/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.0/ln1/LayerNormalization_output_0",
+        "onnx::MatMul_246"
+      ],
+      "outputs": [
+        "/blocks.0/qkv/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/qkv/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.0.qkv.bias",
+        "/blocks.0/qkv/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/qkv/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Split",
+      "op_type": "Split",
+      "inputs": [
+        "/blocks.0/qkv/Add_output_0",
+        "/blocks.0/Constant_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Split_output_0",
+        "/blocks.0/Split_output_1",
+        "/blocks.0/Split_output_2"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.0/Split_output_0",
+        "/blocks.0/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.0/Reshape_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.0/Split_output_1",
+        "/blocks.0/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.0/Split_output_2",
+        "/blocks.0/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.0/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.0/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.0/Transpose_output_0",
+        "/blocks.0/Transpose_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/blocks.0/MatMul_output_0",
+        "/blocks.0/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Div_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.0/Div_output_0",
+        "attn_mask"
+      ],
+      "outputs": [
+        "/blocks.0/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/blocks.0/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.0/Softmax_output_0",
+        "/blocks.0/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.0/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.0/Transpose_3_output_0",
+        "/blocks.0/Constant_5_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/proj/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.0/Reshape_3_output_0",
+        "onnx::MatMul_247"
+      ],
+      "outputs": [
+        "/blocks.0/proj/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/proj/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.0.proj.bias",
+        "/blocks.0/proj/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/proj/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/Add_output_0",
+        "/blocks.0/proj/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/ln2/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/blocks.0/Add_1_output_0",
+        "blocks.0.ln2.weight",
+        "blocks.0.ln2.bias"
+      ],
+      "outputs": [
+        "/blocks.0/ln2/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/ff1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.0/ln2/LayerNormalization_output_0",
+        "onnx::MatMul_248"
+      ],
+      "outputs": [
+        "/blocks.0/ff1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/ff1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.0.ff1.bias",
+        "/blocks.0/ff1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/ff1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Div_1",
+      "op_type": "Div",
+      "inputs": [
+        "/blocks.0/ff1/Add_output_0",
+        "/blocks.0/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Div_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Erf",
+      "op_type": "Erf",
+      "inputs": [
+        "/blocks.0/Div_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Erf_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant_7",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_7_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Add_2",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.0/Erf_output_0",
+        "/blocks.0/Constant_7_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Add_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/blocks.0/ff1/Add_output_0",
+        "/blocks.0/Add_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Constant_8",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.0/Constant_8_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/blocks.0/Mul_output_0",
+        "/blocks.0/Constant_8_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/ff2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.0/Mul_1_output_0",
+        "onnx::MatMul_249"
+      ],
+      "outputs": [
+        "/blocks.0/ff2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/ff2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.0.ff2.bias",
+        "/blocks.0/ff2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/ff2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.0/Add_3",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.0/Add_1_output_0",
+        "/blocks.0/ff2/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.0/Add_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/ln1/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/blocks.0/Add_3_output_0",
+        "blocks.1.ln1.weight",
+        "blocks.1.ln1.bias"
+      ],
+      "outputs": [
+        "/blocks.1/ln1/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/qkv/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.1/ln1/LayerNormalization_output_0",
+        "onnx::MatMul_250"
+      ],
+      "outputs": [
+        "/blocks.1/qkv/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/qkv/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.1.qkv.bias",
+        "/blocks.1/qkv/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/qkv/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Split",
+      "op_type": "Split",
+      "inputs": [
+        "/blocks.1/qkv/Add_output_0",
+        "/blocks.1/Constant_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Split_output_0",
+        "/blocks.1/Split_output_1",
+        "/blocks.1/Split_output_2"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.1/Split_output_0",
+        "/blocks.1/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.1/Reshape_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.1/Split_output_1",
+        "/blocks.1/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.1/Split_output_2",
+        "/blocks.1/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.1/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.1/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.1/Transpose_output_0",
+        "/blocks.1/Transpose_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/blocks.1/MatMul_output_0",
+        "/blocks.1/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Div_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.1/Div_output_0",
+        "attn_mask"
+      ],
+      "outputs": [
+        "/blocks.1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/blocks.1/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.1/Softmax_output_0",
+        "/blocks.1/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.1/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.1/Transpose_3_output_0",
+        "/blocks.1/Constant_5_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/proj/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.1/Reshape_3_output_0",
+        "onnx::MatMul_251"
+      ],
+      "outputs": [
+        "/blocks.1/proj/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/proj/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.1.proj.bias",
+        "/blocks.1/proj/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/proj/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.0/Add_3_output_0",
+        "/blocks.1/proj/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/ln2/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/blocks.1/Add_1_output_0",
+        "blocks.1.ln2.weight",
+        "blocks.1.ln2.bias"
+      ],
+      "outputs": [
+        "/blocks.1/ln2/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/ff1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.1/ln2/LayerNormalization_output_0",
+        "onnx::MatMul_252"
+      ],
+      "outputs": [
+        "/blocks.1/ff1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/ff1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.1.ff1.bias",
+        "/blocks.1/ff1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/ff1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Div_1",
+      "op_type": "Div",
+      "inputs": [
+        "/blocks.1/ff1/Add_output_0",
+        "/blocks.1/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Div_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Erf",
+      "op_type": "Erf",
+      "inputs": [
+        "/blocks.1/Div_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Erf_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant_7",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_7_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Add_2",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.1/Erf_output_0",
+        "/blocks.1/Constant_7_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Add_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/blocks.1/ff1/Add_output_0",
+        "/blocks.1/Add_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Constant_8",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.1/Constant_8_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/blocks.1/Mul_output_0",
+        "/blocks.1/Constant_8_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/ff2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.1/Mul_1_output_0",
+        "onnx::MatMul_253"
+      ],
+      "outputs": [
+        "/blocks.1/ff2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/ff2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.1.ff2.bias",
+        "/blocks.1/ff2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/ff2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.1/Add_3",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.1/Add_1_output_0",
+        "/blocks.1/ff2/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.1/Add_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/ln1/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/blocks.1/Add_3_output_0",
+        "blocks.2.ln1.weight",
+        "blocks.2.ln1.bias"
+      ],
+      "outputs": [
+        "/blocks.2/ln1/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/qkv/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.2/ln1/LayerNormalization_output_0",
+        "onnx::MatMul_254"
+      ],
+      "outputs": [
+        "/blocks.2/qkv/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/qkv/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.2.qkv.bias",
+        "/blocks.2/qkv/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/qkv/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Split",
+      "op_type": "Split",
+      "inputs": [
+        "/blocks.2/qkv/Add_output_0",
+        "/blocks.2/Constant_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Split_output_0",
+        "/blocks.2/Split_output_1",
+        "/blocks.2/Split_output_2"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.2/Split_output_0",
+        "/blocks.2/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.2/Reshape_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.2/Split_output_1",
+        "/blocks.2/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.2/Split_output_2",
+        "/blocks.2/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.2/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.2/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.2/Transpose_output_0",
+        "/blocks.2/Transpose_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/blocks.2/MatMul_output_0",
+        "/blocks.2/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Div_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.2/Div_output_0",
+        "attn_mask"
+      ],
+      "outputs": [
+        "/blocks.2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/blocks.2/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.2/Softmax_output_0",
+        "/blocks.2/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.2/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.2/Transpose_3_output_0",
+        "/blocks.2/Constant_5_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/proj/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.2/Reshape_3_output_0",
+        "onnx::MatMul_255"
+      ],
+      "outputs": [
+        "/blocks.2/proj/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/proj/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.2.proj.bias",
+        "/blocks.2/proj/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/proj/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.1/Add_3_output_0",
+        "/blocks.2/proj/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/ln2/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/blocks.2/Add_1_output_0",
+        "blocks.2.ln2.weight",
+        "blocks.2.ln2.bias"
+      ],
+      "outputs": [
+        "/blocks.2/ln2/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/ff1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.2/ln2/LayerNormalization_output_0",
+        "onnx::MatMul_256"
+      ],
+      "outputs": [
+        "/blocks.2/ff1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/ff1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.2.ff1.bias",
+        "/blocks.2/ff1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/ff1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Div_1",
+      "op_type": "Div",
+      "inputs": [
+        "/blocks.2/ff1/Add_output_0",
+        "/blocks.2/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Div_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Erf",
+      "op_type": "Erf",
+      "inputs": [
+        "/blocks.2/Div_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Erf_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant_7",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_7_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Add_2",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.2/Erf_output_0",
+        "/blocks.2/Constant_7_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Add_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/blocks.2/ff1/Add_output_0",
+        "/blocks.2/Add_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Constant_8",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.2/Constant_8_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/blocks.2/Mul_output_0",
+        "/blocks.2/Constant_8_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/ff2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.2/Mul_1_output_0",
+        "onnx::MatMul_257"
+      ],
+      "outputs": [
+        "/blocks.2/ff2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/ff2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.2.ff2.bias",
+        "/blocks.2/ff2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/ff2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.2/Add_3",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.2/Add_1_output_0",
+        "/blocks.2/ff2/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.2/Add_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/ln1/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/blocks.2/Add_3_output_0",
+        "blocks.3.ln1.weight",
+        "blocks.3.ln1.bias"
+      ],
+      "outputs": [
+        "/blocks.3/ln1/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/qkv/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.3/ln1/LayerNormalization_output_0",
+        "onnx::MatMul_258"
+      ],
+      "outputs": [
+        "/blocks.3/qkv/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/qkv/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.3.qkv.bias",
+        "/blocks.3/qkv/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/qkv/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Split",
+      "op_type": "Split",
+      "inputs": [
+        "/blocks.3/qkv/Add_output_0",
+        "/blocks.3/Constant_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Split_output_0",
+        "/blocks.3/Split_output_1",
+        "/blocks.3/Split_output_2"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant_1",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Reshape",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.3/Split_output_0",
+        "/blocks.3/Constant_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Reshape_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Transpose",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.3/Reshape_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Transpose_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant_2",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Reshape_1",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.3/Split_output_1",
+        "/blocks.3/Constant_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Reshape_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant_3",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Reshape_2",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.3/Split_output_2",
+        "/blocks.3/Constant_3_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Reshape_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Transpose_1",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.3/Reshape_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Transpose_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Transpose_2",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.3/Reshape_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Transpose_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.3/Transpose_output_0",
+        "/blocks.3/Transpose_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant_4",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_4_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Div",
+      "op_type": "Div",
+      "inputs": [
+        "/blocks.3/MatMul_output_0",
+        "/blocks.3/Constant_4_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Div_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Add",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.3/Div_output_0",
+        "attn_mask"
+      ],
+      "outputs": [
+        "/blocks.3/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Softmax",
+      "op_type": "Softmax",
+      "inputs": [
+        "/blocks.3/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Softmax_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/MatMul_1",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.3/Softmax_output_0",
+        "/blocks.3/Transpose_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/MatMul_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Transpose_3",
+      "op_type": "Transpose",
+      "inputs": [
+        "/blocks.3/MatMul_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Transpose_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant_5",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_5_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Reshape_3",
+      "op_type": "Reshape",
+      "inputs": [
+        "/blocks.3/Transpose_3_output_0",
+        "/blocks.3/Constant_5_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Reshape_3_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/proj/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.3/Reshape_3_output_0",
+        "onnx::MatMul_259"
+      ],
+      "outputs": [
+        "/blocks.3/proj/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/proj/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.3.proj.bias",
+        "/blocks.3/proj/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/proj/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Add_1",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.2/Add_3_output_0",
+        "/blocks.3/proj/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Add_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/ln2/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/blocks.3/Add_1_output_0",
+        "blocks.3.ln2.weight",
+        "blocks.3.ln2.bias"
+      ],
+      "outputs": [
+        "/blocks.3/ln2/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/ff1/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.3/ln2/LayerNormalization_output_0",
+        "onnx::MatMul_260"
+      ],
+      "outputs": [
+        "/blocks.3/ff1/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/ff1/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.3.ff1.bias",
+        "/blocks.3/ff1/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/ff1/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant_6",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_6_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Div_1",
+      "op_type": "Div",
+      "inputs": [
+        "/blocks.3/ff1/Add_output_0",
+        "/blocks.3/Constant_6_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Div_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Erf",
+      "op_type": "Erf",
+      "inputs": [
+        "/blocks.3/Div_1_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Erf_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant_7",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_7_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Add_2",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.3/Erf_output_0",
+        "/blocks.3/Constant_7_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Add_2_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Mul",
+      "op_type": "Mul",
+      "inputs": [
+        "/blocks.3/ff1/Add_output_0",
+        "/blocks.3/Add_2_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Mul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Constant_8",
+      "op_type": "Constant",
+      "inputs": [],
+      "outputs": [
+        "/blocks.3/Constant_8_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Mul_1",
+      "op_type": "Mul",
+      "inputs": [
+        "/blocks.3/Mul_output_0",
+        "/blocks.3/Constant_8_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Mul_1_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/ff2/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/blocks.3/Mul_1_output_0",
+        "onnx::MatMul_261"
+      ],
+      "outputs": [
+        "/blocks.3/ff2/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/ff2/Add",
+      "op_type": "Add",
+      "inputs": [
+        "blocks.3.ff2.bias",
+        "/blocks.3/ff2/MatMul_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/ff2/Add_output_0"
+      ]
+    },
+    {
+      "name": "/blocks.3/Add_3",
+      "op_type": "Add",
+      "inputs": [
+        "/blocks.3/Add_1_output_0",
+        "/blocks.3/ff2/Add_output_0"
+      ],
+      "outputs": [
+        "/blocks.3/Add_3_output_0"
+      ]
+    },
+    {
+      "name": "/ln_f/LayerNormalization",
+      "op_type": "LayerNormalization",
+      "inputs": [
+        "/blocks.3/Add_3_output_0",
+        "ln_f.weight",
+        "ln_f.bias"
+      ],
+      "outputs": [
+        "/ln_f/LayerNormalization_output_0"
+      ]
+    },
+    {
+      "name": "/head/MatMul",
+      "op_type": "MatMul",
+      "inputs": [
+        "/ln_f/LayerNormalization_output_0",
+        "onnx::MatMul_262"
+      ],
+      "outputs": [
+        "/head/MatMul_output_0"
+      ]
+    },
+    {
+      "name": "/head/Add",
+      "op_type": "Add",
+      "inputs": [
+        "head.bias",
+        "/head/MatMul_output_0"
+      ],
+      "outputs": [
+        "logits"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "src_node": "/tok_emb/Gather",
+      "dst_node": "/Add",
+      "tensor": "/tok_emb/Gather_output_0"
+    },
+    {
+      "src_node": "/Add",
+      "dst_node": "/blocks.0/ln1/LayerNormalization",
+      "tensor": "/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.0/ln1/LayerNormalization",
+      "dst_node": "/blocks.0/qkv/MatMul",
+      "tensor": "/blocks.0/ln1/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/blocks.0/qkv/MatMul",
+      "dst_node": "/blocks.0/qkv/Add",
+      "tensor": "/blocks.0/qkv/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.0/qkv/Add",
+      "dst_node": "/blocks.0/Split",
+      "tensor": "/blocks.0/qkv/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Constant",
+      "dst_node": "/blocks.0/Split",
+      "tensor": "/blocks.0/Constant_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Split",
+      "dst_node": "/blocks.0/Reshape",
+      "tensor": "/blocks.0/Split_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Constant_1",
+      "dst_node": "/blocks.0/Reshape",
+      "tensor": "/blocks.0/Constant_1_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Reshape",
+      "dst_node": "/blocks.0/Transpose",
+      "tensor": "/blocks.0/Reshape_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Split",
+      "dst_node": "/blocks.0/Reshape_1",
+      "tensor": "/blocks.0/Split_output_1"
+    },
+    {
+      "src_node": "/blocks.0/Constant_2",
+      "dst_node": "/blocks.0/Reshape_1",
+      "tensor": "/blocks.0/Constant_2_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Split",
+      "dst_node": "/blocks.0/Reshape_2",
+      "tensor": "/blocks.0/Split_output_2"
+    },
+    {
+      "src_node": "/blocks.0/Constant_3",
+      "dst_node": "/blocks.0/Reshape_2",
+      "tensor": "/blocks.0/Constant_3_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Reshape_2",
+      "dst_node": "/blocks.0/Transpose_1",
+      "tensor": "/blocks.0/Reshape_2_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Reshape_1",
+      "dst_node": "/blocks.0/Transpose_2",
+      "tensor": "/blocks.0/Reshape_1_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Transpose",
+      "dst_node": "/blocks.0/MatMul",
+      "tensor": "/blocks.0/Transpose_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Transpose_2",
+      "dst_node": "/blocks.0/MatMul",
+      "tensor": "/blocks.0/Transpose_2_output_0"
+    },
+    {
+      "src_node": "/blocks.0/MatMul",
+      "dst_node": "/blocks.0/Div",
+      "tensor": "/blocks.0/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Constant_4",
+      "dst_node": "/blocks.0/Div",
+      "tensor": "/blocks.0/Constant_4_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Div",
+      "dst_node": "/blocks.0/Add",
+      "tensor": "/blocks.0/Div_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Add",
+      "dst_node": "/blocks.0/Softmax",
+      "tensor": "/blocks.0/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Softmax",
+      "dst_node": "/blocks.0/MatMul_1",
+      "tensor": "/blocks.0/Softmax_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Transpose_1",
+      "dst_node": "/blocks.0/MatMul_1",
+      "tensor": "/blocks.0/Transpose_1_output_0"
+    },
+    {
+      "src_node": "/blocks.0/MatMul_1",
+      "dst_node": "/blocks.0/Transpose_3",
+      "tensor": "/blocks.0/MatMul_1_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Transpose_3",
+      "dst_node": "/blocks.0/Reshape_3",
+      "tensor": "/blocks.0/Transpose_3_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Constant_5",
+      "dst_node": "/blocks.0/Reshape_3",
+      "tensor": "/blocks.0/Constant_5_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Reshape_3",
+      "dst_node": "/blocks.0/proj/MatMul",
+      "tensor": "/blocks.0/Reshape_3_output_0"
+    },
+    {
+      "src_node": "/blocks.0/proj/MatMul",
+      "dst_node": "/blocks.0/proj/Add",
+      "tensor": "/blocks.0/proj/MatMul_output_0"
+    },
+    {
+      "src_node": "/Add",
+      "dst_node": "/blocks.0/Add_1",
+      "tensor": "/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.0/proj/Add",
+      "dst_node": "/blocks.0/Add_1",
+      "tensor": "/blocks.0/proj/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Add_1",
+      "dst_node": "/blocks.0/ln2/LayerNormalization",
+      "tensor": "/blocks.0/Add_1_output_0"
+    },
+    {
+      "src_node": "/blocks.0/ln2/LayerNormalization",
+      "dst_node": "/blocks.0/ff1/MatMul",
+      "tensor": "/blocks.0/ln2/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/blocks.0/ff1/MatMul",
+      "dst_node": "/blocks.0/ff1/Add",
+      "tensor": "/blocks.0/ff1/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.0/ff1/Add",
+      "dst_node": "/blocks.0/Div_1",
+      "tensor": "/blocks.0/ff1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Constant_6",
+      "dst_node": "/blocks.0/Div_1",
+      "tensor": "/blocks.0/Constant_6_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Div_1",
+      "dst_node": "/blocks.0/Erf",
+      "tensor": "/blocks.0/Div_1_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Erf",
+      "dst_node": "/blocks.0/Add_2",
+      "tensor": "/blocks.0/Erf_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Constant_7",
+      "dst_node": "/blocks.0/Add_2",
+      "tensor": "/blocks.0/Constant_7_output_0"
+    },
+    {
+      "src_node": "/blocks.0/ff1/Add",
+      "dst_node": "/blocks.0/Mul",
+      "tensor": "/blocks.0/ff1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Add_2",
+      "dst_node": "/blocks.0/Mul",
+      "tensor": "/blocks.0/Add_2_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Mul",
+      "dst_node": "/blocks.0/Mul_1",
+      "tensor": "/blocks.0/Mul_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Constant_8",
+      "dst_node": "/blocks.0/Mul_1",
+      "tensor": "/blocks.0/Constant_8_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Mul_1",
+      "dst_node": "/blocks.0/ff2/MatMul",
+      "tensor": "/blocks.0/Mul_1_output_0"
+    },
+    {
+      "src_node": "/blocks.0/ff2/MatMul",
+      "dst_node": "/blocks.0/ff2/Add",
+      "tensor": "/blocks.0/ff2/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Add_1",
+      "dst_node": "/blocks.0/Add_3",
+      "tensor": "/blocks.0/Add_1_output_0"
+    },
+    {
+      "src_node": "/blocks.0/ff2/Add",
+      "dst_node": "/blocks.0/Add_3",
+      "tensor": "/blocks.0/ff2/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Add_3",
+      "dst_node": "/blocks.1/ln1/LayerNormalization",
+      "tensor": "/blocks.0/Add_3_output_0"
+    },
+    {
+      "src_node": "/blocks.1/ln1/LayerNormalization",
+      "dst_node": "/blocks.1/qkv/MatMul",
+      "tensor": "/blocks.1/ln1/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/blocks.1/qkv/MatMul",
+      "dst_node": "/blocks.1/qkv/Add",
+      "tensor": "/blocks.1/qkv/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.1/qkv/Add",
+      "dst_node": "/blocks.1/Split",
+      "tensor": "/blocks.1/qkv/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Constant",
+      "dst_node": "/blocks.1/Split",
+      "tensor": "/blocks.1/Constant_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Split",
+      "dst_node": "/blocks.1/Reshape",
+      "tensor": "/blocks.1/Split_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Constant_1",
+      "dst_node": "/blocks.1/Reshape",
+      "tensor": "/blocks.1/Constant_1_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Reshape",
+      "dst_node": "/blocks.1/Transpose",
+      "tensor": "/blocks.1/Reshape_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Split",
+      "dst_node": "/blocks.1/Reshape_1",
+      "tensor": "/blocks.1/Split_output_1"
+    },
+    {
+      "src_node": "/blocks.1/Constant_2",
+      "dst_node": "/blocks.1/Reshape_1",
+      "tensor": "/blocks.1/Constant_2_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Split",
+      "dst_node": "/blocks.1/Reshape_2",
+      "tensor": "/blocks.1/Split_output_2"
+    },
+    {
+      "src_node": "/blocks.1/Constant_3",
+      "dst_node": "/blocks.1/Reshape_2",
+      "tensor": "/blocks.1/Constant_3_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Reshape_2",
+      "dst_node": "/blocks.1/Transpose_1",
+      "tensor": "/blocks.1/Reshape_2_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Reshape_1",
+      "dst_node": "/blocks.1/Transpose_2",
+      "tensor": "/blocks.1/Reshape_1_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Transpose",
+      "dst_node": "/blocks.1/MatMul",
+      "tensor": "/blocks.1/Transpose_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Transpose_2",
+      "dst_node": "/blocks.1/MatMul",
+      "tensor": "/blocks.1/Transpose_2_output_0"
+    },
+    {
+      "src_node": "/blocks.1/MatMul",
+      "dst_node": "/blocks.1/Div",
+      "tensor": "/blocks.1/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Constant_4",
+      "dst_node": "/blocks.1/Div",
+      "tensor": "/blocks.1/Constant_4_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Div",
+      "dst_node": "/blocks.1/Add",
+      "tensor": "/blocks.1/Div_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Add",
+      "dst_node": "/blocks.1/Softmax",
+      "tensor": "/blocks.1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Softmax",
+      "dst_node": "/blocks.1/MatMul_1",
+      "tensor": "/blocks.1/Softmax_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Transpose_1",
+      "dst_node": "/blocks.1/MatMul_1",
+      "tensor": "/blocks.1/Transpose_1_output_0"
+    },
+    {
+      "src_node": "/blocks.1/MatMul_1",
+      "dst_node": "/blocks.1/Transpose_3",
+      "tensor": "/blocks.1/MatMul_1_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Transpose_3",
+      "dst_node": "/blocks.1/Reshape_3",
+      "tensor": "/blocks.1/Transpose_3_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Constant_5",
+      "dst_node": "/blocks.1/Reshape_3",
+      "tensor": "/blocks.1/Constant_5_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Reshape_3",
+      "dst_node": "/blocks.1/proj/MatMul",
+      "tensor": "/blocks.1/Reshape_3_output_0"
+    },
+    {
+      "src_node": "/blocks.1/proj/MatMul",
+      "dst_node": "/blocks.1/proj/Add",
+      "tensor": "/blocks.1/proj/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.0/Add_3",
+      "dst_node": "/blocks.1/Add_1",
+      "tensor": "/blocks.0/Add_3_output_0"
+    },
+    {
+      "src_node": "/blocks.1/proj/Add",
+      "dst_node": "/blocks.1/Add_1",
+      "tensor": "/blocks.1/proj/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Add_1",
+      "dst_node": "/blocks.1/ln2/LayerNormalization",
+      "tensor": "/blocks.1/Add_1_output_0"
+    },
+    {
+      "src_node": "/blocks.1/ln2/LayerNormalization",
+      "dst_node": "/blocks.1/ff1/MatMul",
+      "tensor": "/blocks.1/ln2/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/blocks.1/ff1/MatMul",
+      "dst_node": "/blocks.1/ff1/Add",
+      "tensor": "/blocks.1/ff1/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.1/ff1/Add",
+      "dst_node": "/blocks.1/Div_1",
+      "tensor": "/blocks.1/ff1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Constant_6",
+      "dst_node": "/blocks.1/Div_1",
+      "tensor": "/blocks.1/Constant_6_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Div_1",
+      "dst_node": "/blocks.1/Erf",
+      "tensor": "/blocks.1/Div_1_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Erf",
+      "dst_node": "/blocks.1/Add_2",
+      "tensor": "/blocks.1/Erf_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Constant_7",
+      "dst_node": "/blocks.1/Add_2",
+      "tensor": "/blocks.1/Constant_7_output_0"
+    },
+    {
+      "src_node": "/blocks.1/ff1/Add",
+      "dst_node": "/blocks.1/Mul",
+      "tensor": "/blocks.1/ff1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Add_2",
+      "dst_node": "/blocks.1/Mul",
+      "tensor": "/blocks.1/Add_2_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Mul",
+      "dst_node": "/blocks.1/Mul_1",
+      "tensor": "/blocks.1/Mul_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Constant_8",
+      "dst_node": "/blocks.1/Mul_1",
+      "tensor": "/blocks.1/Constant_8_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Mul_1",
+      "dst_node": "/blocks.1/ff2/MatMul",
+      "tensor": "/blocks.1/Mul_1_output_0"
+    },
+    {
+      "src_node": "/blocks.1/ff2/MatMul",
+      "dst_node": "/blocks.1/ff2/Add",
+      "tensor": "/blocks.1/ff2/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Add_1",
+      "dst_node": "/blocks.1/Add_3",
+      "tensor": "/blocks.1/Add_1_output_0"
+    },
+    {
+      "src_node": "/blocks.1/ff2/Add",
+      "dst_node": "/blocks.1/Add_3",
+      "tensor": "/blocks.1/ff2/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Add_3",
+      "dst_node": "/blocks.2/ln1/LayerNormalization",
+      "tensor": "/blocks.1/Add_3_output_0"
+    },
+    {
+      "src_node": "/blocks.2/ln1/LayerNormalization",
+      "dst_node": "/blocks.2/qkv/MatMul",
+      "tensor": "/blocks.2/ln1/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/blocks.2/qkv/MatMul",
+      "dst_node": "/blocks.2/qkv/Add",
+      "tensor": "/blocks.2/qkv/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.2/qkv/Add",
+      "dst_node": "/blocks.2/Split",
+      "tensor": "/blocks.2/qkv/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Constant",
+      "dst_node": "/blocks.2/Split",
+      "tensor": "/blocks.2/Constant_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Split",
+      "dst_node": "/blocks.2/Reshape",
+      "tensor": "/blocks.2/Split_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Constant_1",
+      "dst_node": "/blocks.2/Reshape",
+      "tensor": "/blocks.2/Constant_1_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Reshape",
+      "dst_node": "/blocks.2/Transpose",
+      "tensor": "/blocks.2/Reshape_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Split",
+      "dst_node": "/blocks.2/Reshape_1",
+      "tensor": "/blocks.2/Split_output_1"
+    },
+    {
+      "src_node": "/blocks.2/Constant_2",
+      "dst_node": "/blocks.2/Reshape_1",
+      "tensor": "/blocks.2/Constant_2_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Split",
+      "dst_node": "/blocks.2/Reshape_2",
+      "tensor": "/blocks.2/Split_output_2"
+    },
+    {
+      "src_node": "/blocks.2/Constant_3",
+      "dst_node": "/blocks.2/Reshape_2",
+      "tensor": "/blocks.2/Constant_3_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Reshape_2",
+      "dst_node": "/blocks.2/Transpose_1",
+      "tensor": "/blocks.2/Reshape_2_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Reshape_1",
+      "dst_node": "/blocks.2/Transpose_2",
+      "tensor": "/blocks.2/Reshape_1_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Transpose",
+      "dst_node": "/blocks.2/MatMul",
+      "tensor": "/blocks.2/Transpose_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Transpose_2",
+      "dst_node": "/blocks.2/MatMul",
+      "tensor": "/blocks.2/Transpose_2_output_0"
+    },
+    {
+      "src_node": "/blocks.2/MatMul",
+      "dst_node": "/blocks.2/Div",
+      "tensor": "/blocks.2/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Constant_4",
+      "dst_node": "/blocks.2/Div",
+      "tensor": "/blocks.2/Constant_4_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Div",
+      "dst_node": "/blocks.2/Add",
+      "tensor": "/blocks.2/Div_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Add",
+      "dst_node": "/blocks.2/Softmax",
+      "tensor": "/blocks.2/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Softmax",
+      "dst_node": "/blocks.2/MatMul_1",
+      "tensor": "/blocks.2/Softmax_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Transpose_1",
+      "dst_node": "/blocks.2/MatMul_1",
+      "tensor": "/blocks.2/Transpose_1_output_0"
+    },
+    {
+      "src_node": "/blocks.2/MatMul_1",
+      "dst_node": "/blocks.2/Transpose_3",
+      "tensor": "/blocks.2/MatMul_1_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Transpose_3",
+      "dst_node": "/blocks.2/Reshape_3",
+      "tensor": "/blocks.2/Transpose_3_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Constant_5",
+      "dst_node": "/blocks.2/Reshape_3",
+      "tensor": "/blocks.2/Constant_5_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Reshape_3",
+      "dst_node": "/blocks.2/proj/MatMul",
+      "tensor": "/blocks.2/Reshape_3_output_0"
+    },
+    {
+      "src_node": "/blocks.2/proj/MatMul",
+      "dst_node": "/blocks.2/proj/Add",
+      "tensor": "/blocks.2/proj/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.1/Add_3",
+      "dst_node": "/blocks.2/Add_1",
+      "tensor": "/blocks.1/Add_3_output_0"
+    },
+    {
+      "src_node": "/blocks.2/proj/Add",
+      "dst_node": "/blocks.2/Add_1",
+      "tensor": "/blocks.2/proj/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Add_1",
+      "dst_node": "/blocks.2/ln2/LayerNormalization",
+      "tensor": "/blocks.2/Add_1_output_0"
+    },
+    {
+      "src_node": "/blocks.2/ln2/LayerNormalization",
+      "dst_node": "/blocks.2/ff1/MatMul",
+      "tensor": "/blocks.2/ln2/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/blocks.2/ff1/MatMul",
+      "dst_node": "/blocks.2/ff1/Add",
+      "tensor": "/blocks.2/ff1/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.2/ff1/Add",
+      "dst_node": "/blocks.2/Div_1",
+      "tensor": "/blocks.2/ff1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Constant_6",
+      "dst_node": "/blocks.2/Div_1",
+      "tensor": "/blocks.2/Constant_6_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Div_1",
+      "dst_node": "/blocks.2/Erf",
+      "tensor": "/blocks.2/Div_1_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Erf",
+      "dst_node": "/blocks.2/Add_2",
+      "tensor": "/blocks.2/Erf_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Constant_7",
+      "dst_node": "/blocks.2/Add_2",
+      "tensor": "/blocks.2/Constant_7_output_0"
+    },
+    {
+      "src_node": "/blocks.2/ff1/Add",
+      "dst_node": "/blocks.2/Mul",
+      "tensor": "/blocks.2/ff1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Add_2",
+      "dst_node": "/blocks.2/Mul",
+      "tensor": "/blocks.2/Add_2_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Mul",
+      "dst_node": "/blocks.2/Mul_1",
+      "tensor": "/blocks.2/Mul_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Constant_8",
+      "dst_node": "/blocks.2/Mul_1",
+      "tensor": "/blocks.2/Constant_8_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Mul_1",
+      "dst_node": "/blocks.2/ff2/MatMul",
+      "tensor": "/blocks.2/Mul_1_output_0"
+    },
+    {
+      "src_node": "/blocks.2/ff2/MatMul",
+      "dst_node": "/blocks.2/ff2/Add",
+      "tensor": "/blocks.2/ff2/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Add_1",
+      "dst_node": "/blocks.2/Add_3",
+      "tensor": "/blocks.2/Add_1_output_0"
+    },
+    {
+      "src_node": "/blocks.2/ff2/Add",
+      "dst_node": "/blocks.2/Add_3",
+      "tensor": "/blocks.2/ff2/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Add_3",
+      "dst_node": "/blocks.3/ln1/LayerNormalization",
+      "tensor": "/blocks.2/Add_3_output_0"
+    },
+    {
+      "src_node": "/blocks.3/ln1/LayerNormalization",
+      "dst_node": "/blocks.3/qkv/MatMul",
+      "tensor": "/blocks.3/ln1/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/blocks.3/qkv/MatMul",
+      "dst_node": "/blocks.3/qkv/Add",
+      "tensor": "/blocks.3/qkv/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.3/qkv/Add",
+      "dst_node": "/blocks.3/Split",
+      "tensor": "/blocks.3/qkv/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Constant",
+      "dst_node": "/blocks.3/Split",
+      "tensor": "/blocks.3/Constant_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Split",
+      "dst_node": "/blocks.3/Reshape",
+      "tensor": "/blocks.3/Split_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Constant_1",
+      "dst_node": "/blocks.3/Reshape",
+      "tensor": "/blocks.3/Constant_1_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Reshape",
+      "dst_node": "/blocks.3/Transpose",
+      "tensor": "/blocks.3/Reshape_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Split",
+      "dst_node": "/blocks.3/Reshape_1",
+      "tensor": "/blocks.3/Split_output_1"
+    },
+    {
+      "src_node": "/blocks.3/Constant_2",
+      "dst_node": "/blocks.3/Reshape_1",
+      "tensor": "/blocks.3/Constant_2_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Split",
+      "dst_node": "/blocks.3/Reshape_2",
+      "tensor": "/blocks.3/Split_output_2"
+    },
+    {
+      "src_node": "/blocks.3/Constant_3",
+      "dst_node": "/blocks.3/Reshape_2",
+      "tensor": "/blocks.3/Constant_3_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Reshape_2",
+      "dst_node": "/blocks.3/Transpose_1",
+      "tensor": "/blocks.3/Reshape_2_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Reshape_1",
+      "dst_node": "/blocks.3/Transpose_2",
+      "tensor": "/blocks.3/Reshape_1_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Transpose",
+      "dst_node": "/blocks.3/MatMul",
+      "tensor": "/blocks.3/Transpose_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Transpose_2",
+      "dst_node": "/blocks.3/MatMul",
+      "tensor": "/blocks.3/Transpose_2_output_0"
+    },
+    {
+      "src_node": "/blocks.3/MatMul",
+      "dst_node": "/blocks.3/Div",
+      "tensor": "/blocks.3/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Constant_4",
+      "dst_node": "/blocks.3/Div",
+      "tensor": "/blocks.3/Constant_4_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Div",
+      "dst_node": "/blocks.3/Add",
+      "tensor": "/blocks.3/Div_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Add",
+      "dst_node": "/blocks.3/Softmax",
+      "tensor": "/blocks.3/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Softmax",
+      "dst_node": "/blocks.3/MatMul_1",
+      "tensor": "/blocks.3/Softmax_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Transpose_1",
+      "dst_node": "/blocks.3/MatMul_1",
+      "tensor": "/blocks.3/Transpose_1_output_0"
+    },
+    {
+      "src_node": "/blocks.3/MatMul_1",
+      "dst_node": "/blocks.3/Transpose_3",
+      "tensor": "/blocks.3/MatMul_1_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Transpose_3",
+      "dst_node": "/blocks.3/Reshape_3",
+      "tensor": "/blocks.3/Transpose_3_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Constant_5",
+      "dst_node": "/blocks.3/Reshape_3",
+      "tensor": "/blocks.3/Constant_5_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Reshape_3",
+      "dst_node": "/blocks.3/proj/MatMul",
+      "tensor": "/blocks.3/Reshape_3_output_0"
+    },
+    {
+      "src_node": "/blocks.3/proj/MatMul",
+      "dst_node": "/blocks.3/proj/Add",
+      "tensor": "/blocks.3/proj/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.2/Add_3",
+      "dst_node": "/blocks.3/Add_1",
+      "tensor": "/blocks.2/Add_3_output_0"
+    },
+    {
+      "src_node": "/blocks.3/proj/Add",
+      "dst_node": "/blocks.3/Add_1",
+      "tensor": "/blocks.3/proj/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Add_1",
+      "dst_node": "/blocks.3/ln2/LayerNormalization",
+      "tensor": "/blocks.3/Add_1_output_0"
+    },
+    {
+      "src_node": "/blocks.3/ln2/LayerNormalization",
+      "dst_node": "/blocks.3/ff1/MatMul",
+      "tensor": "/blocks.3/ln2/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/blocks.3/ff1/MatMul",
+      "dst_node": "/blocks.3/ff1/Add",
+      "tensor": "/blocks.3/ff1/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.3/ff1/Add",
+      "dst_node": "/blocks.3/Div_1",
+      "tensor": "/blocks.3/ff1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Constant_6",
+      "dst_node": "/blocks.3/Div_1",
+      "tensor": "/blocks.3/Constant_6_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Div_1",
+      "dst_node": "/blocks.3/Erf",
+      "tensor": "/blocks.3/Div_1_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Erf",
+      "dst_node": "/blocks.3/Add_2",
+      "tensor": "/blocks.3/Erf_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Constant_7",
+      "dst_node": "/blocks.3/Add_2",
+      "tensor": "/blocks.3/Constant_7_output_0"
+    },
+    {
+      "src_node": "/blocks.3/ff1/Add",
+      "dst_node": "/blocks.3/Mul",
+      "tensor": "/blocks.3/ff1/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Add_2",
+      "dst_node": "/blocks.3/Mul",
+      "tensor": "/blocks.3/Add_2_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Mul",
+      "dst_node": "/blocks.3/Mul_1",
+      "tensor": "/blocks.3/Mul_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Constant_8",
+      "dst_node": "/blocks.3/Mul_1",
+      "tensor": "/blocks.3/Constant_8_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Mul_1",
+      "dst_node": "/blocks.3/ff2/MatMul",
+      "tensor": "/blocks.3/Mul_1_output_0"
+    },
+    {
+      "src_node": "/blocks.3/ff2/MatMul",
+      "dst_node": "/blocks.3/ff2/Add",
+      "tensor": "/blocks.3/ff2/MatMul_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Add_1",
+      "dst_node": "/blocks.3/Add_3",
+      "tensor": "/blocks.3/Add_1_output_0"
+    },
+    {
+      "src_node": "/blocks.3/ff2/Add",
+      "dst_node": "/blocks.3/Add_3",
+      "tensor": "/blocks.3/ff2/Add_output_0"
+    },
+    {
+      "src_node": "/blocks.3/Add_3",
+      "dst_node": "/ln_f/LayerNormalization",
+      "tensor": "/blocks.3/Add_3_output_0"
+    },
+    {
+      "src_node": "/ln_f/LayerNormalization",
+      "dst_node": "/head/MatMul",
+      "tensor": "/ln_f/LayerNormalization_output_0"
+    },
+    {
+      "src_node": "/head/MatMul",
+      "dst_node": "/head/Add",
+      "tensor": "/head/MatMul_output_0"
+    }
+  ]
+}
