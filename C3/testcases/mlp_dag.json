@@ -1,0 +1,120 @@
+{
+  "format_version": "1.0",
+  "graph_inputs": [
+    {
+      "name": "input",
+      "dtype": "FLOAT",
+      "shape": [
+        "batch",
+        1,
+        28,
+        28
+      ]
+    }
+  ],
+  "graph_outputs": [
+    {
+      "name": "logits",
+      "dtype": "FLOAT",
+      "shape": [
+        "batch",
+        10
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "/flatten/Flatten",
+      "op_type": "Flatten",
+      "inputs": [
+        "input"
+      ],
+      "outputs": [
+        "/flatten/Flatten_output_0"
+      ]
+    },
+    {
+      "name": "/fc1/Gemm",
+      "op_type": "Gemm",
+      "inputs": [
+        "/flatten/Flatten_output_0",
+        "fc1.weight",
+        "fc1.bias"
+      ],
+      "outputs": [
+        "/fc1/Gemm_output_0"
+      ]
+    },
+    {
+      "name": "/relu/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/fc1/Gemm_output_0"
+      ],
+      "outputs": [
+        "/relu/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/fc2/Gemm",
+      "op_type": "Gemm",
+      "inputs": [
+        "/relu/Relu_output_0",
+        "fc2.weight",
+        "fc2.bias"
+      ],
+      "outputs": [
+        "/fc2/Gemm_output_0"
+      ]
+    },
+    {
+      "name": "/relu_1/Relu",
+      "op_type": "Relu",
+      "inputs": [
+        "/fc2/Gemm_output_0"
+      ],
+      "outputs": [
+        "/relu_1/Relu_output_0"
+      ]
+    },
+    {
+      "name": "/fc3/Gemm",
+      "op_type": "Gemm",
+      "inputs": [
+        "/relu_1/Relu_output_0",
+        "fc3.weight",
+        "fc3.bias"
+      ],
+      "outputs": [
+        "logits"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "src_node": "/flatten/Flatten",
+      "dst_node": "/fc1/Gemm",
+      "tensor": "/flatten/Flatten_output_0"
+    },
+    {
+      "src_node": "/fc1/Gemm",
+      "dst_node": "/relu/Relu",
+      "tensor": "/fc1/Gemm_output_0"
+    },
+    {
+      "src_node": "/relu/Relu",
+      "dst_node": "/fc2/Gemm",
+      "tensor": "/relu/Relu_output_0"
+    },
+    {
+      "src_node": "/fc2/Gemm",
+      "dst_node": "/relu_1/Relu",
+      "tensor": "/fc2/Gemm_output_0"
+    },
+    {
+      "src_node": "/relu_1/Relu",
+      "dst_node": "/fc3/Gemm",
+      "tensor": "/relu_1/Relu_output_0"
+    }
+  ]
+}
