@@ -1,0 +1,216 @@
+#!/usr/bin/env python3
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+from typing import Any, Dict, Iterable, Set
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "src"))
+
+from compiler import compile_ptx_to_aecbin
+from ir import MemoryOperand, Register
+from ptx_parser import parse_ptx
+
+
+def _iter_ptx_registers(program) -> Iterable[Register]:
+    for func in program.functions:
+        for block in func.blocks.values():
+            for instr in block.instructions:
+                if isinstance(instr.dest, Register):
+                    yield instr.dest
+
+                for src in instr.srcs:
+                    if isinstance(src, Register):
+                        yield src
+                    elif isinstance(src, MemoryOperand):
+                        if isinstance(src.base, Register):
+                            yield src.base
+                        if isinstance(src.offset, Register):
+                            yield src.offset
+
+
+def _count_ptx_instructions(program) -> int:
+    return sum(
+        len(block.instructions)
+        for func in program.functions
+        for block in func.blocks.values()
+    )
+
+
+def _count_basic_blocks(program) -> int:
+    return sum(len(func.blocks) for func in program.functions)
+
+
+def _count_virtual_registers(program) -> int:
+    regs: Set[Register] = {
+        reg for reg in _iter_ptx_registers(program)
+        if reg.kind not in {
+            "tid.x", "tid.y", "tid.z",
+            "ntid.x", "ntid.y", "ntid.z",
+            "ctaid.x", "ctaid.y", "ctaid.z",
+            "nctaid.x", "nctaid.y", "nctaid.z",
+            "laneid", "warpid",
+        }
+        and reg.kind != "p"
+    }
+    return len(regs)
+
+
+def _count_predicates(program) -> int:
+    preds: Set[int] = set()
+
+    for reg in _iter_ptx_registers(program):
+        if reg.kind == "p":
+            preds.add(reg.num)
+
+    for func in program.functions:
+        for block in func.blocks.values():
+            for instr in block.instructions:
+                if instr.pred:
+                    text = str(instr.pred).replace("!", "").replace("%p", "")
+                    if text.isdigit():
+                        preds.add(int(text))
+
+    return len(preds)
+
+
+def _make_report(
+    *,
+    input_path: str,
+    output_path: str,
+    opt_level: str,
+    source: str,
+    aecbin: bytes,
+    compile_stats: Dict[str, Any],
+) -> Dict[str, Any]:
+    program = parse_ptx(source)
+
+    return {
+        "status": "ok",
+        "input": input_path,
+        "output": output_path,
+        "opt_level": opt_level,
+        "num_ptx_instructions": _count_ptx_instructions(program),
+        "num_aec_instructions": compile_stats["num_aec_instructions"],
+        "num_basic_blocks": _count_basic_blocks(program),
+        "num_virtual_registers": _count_virtual_registers(program),
+        "num_physical_registers": compile_stats["physical_registers"],
+        "max_physical_register": compile_stats["max_physical_register"],
+        "num_predicates": _count_predicates(program),
+        "spills": {
+            "loads": compile_stats["spill_loads"],
+            "stores": compile_stats["spill_stores"],
+        },
+        "optimization_stats": {
+            "dce_removed": compile_stats.get("dce_removed", 0),
+            "global_dead_removed": compile_stats.get("global_dead_removed", 0),
+            "cse_removed": compile_stats.get("cse_removed", 0),
+            "licm_moved": compile_stats.get("licm_moved", 0),
+            "strength_reduced": compile_stats.get("strength_reduced", 0),
+            "constants_propagated": compile_stats.get("constants_propagated", 0),
+            "constants_folded": compile_stats.get("constants_folded", 0),
+            "algebraic_simplified": compile_stats.get("algebraic_simplified", 0),
+            "fma_fused": compile_stats.get("fma_fused", 0),
+            "copies_propagated": compile_stats.get("copies_propagated", 0),
+            "copies_removed": compile_stats.get("copies_removed", 0),
+            "self_copies_removed": compile_stats.get("self_copies_removed", 0),
+            "redundant_loads_removed": compile_stats.get(
+                "redundant_loads_removed", 0
+            ),
+        },
+        "passes": {
+            "dce": opt_level in ("O1", "O2", "O3"),
+            "cse": opt_level in ("O2", "O3"),
+            "licm": opt_level in ("O2", "O3"),
+            "scheduler": compile_stats["scheduler"],
+        },
+        "warnings": [],
+    }
+
+
+def _write_json(path: str, payload: Dict[str, Any]) -> None:
+    report_path = Path(path)
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="AEC IR Compiler - PTX to AEC ISA"
+    )
+    parser.add_argument("input", help="Input PTX file")
+    parser.add_argument(
+        "-o", "--output", required=True, help="Output AEC binary file"
+    )
+    parser.add_argument(
+        "-O",
+        dest="opt_level",
+        default="0",
+        choices=["0", "1", "2", "3"],
+        help="Optimization level",
+    )
+    parser.add_argument(
+        "--report",
+        help="Write a JSON compilation report to this path",
+    )
+    args = parser.parse_args()
+
+    opt_level = "O" + args.opt_level
+
+    try:
+        source = Path(args.input).read_text(encoding="utf-8")
+        aecbin, compile_stats = compile_ptx_to_aecbin(
+            source,
+            opt_level=opt_level,
+            return_stats=True,
+        )
+
+        if not aecbin:
+            raise ValueError("Compiler produced an empty .aecbin")
+        if len(aecbin) % 16 != 0:
+            raise ValueError(
+                f"Invalid .aecbin size {len(aecbin)}; "
+                "expected a multiple of 16"
+            )
+
+        output_path = Path(args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_bytes(aecbin)
+
+        if args.report:
+            report = _make_report(
+                input_path=args.input,
+                output_path=args.output,
+                opt_level=opt_level,
+                source=source,
+                aecbin=aecbin,
+                compile_stats=compile_stats,
+            )
+            _write_json(args.report, report)
+
+        return 0
+
+    except Exception as exc:
+        if args.report:
+            _write_json(
+                args.report,
+                {
+                    "status": "error",
+                    "input": args.input,
+                    "output": args.output,
+                    "opt_level": opt_level,
+                    "error": str(exc),
+                    "warnings": [],
+                },
+            )
+
+        print(f"aec-cc: error: {exc}", file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

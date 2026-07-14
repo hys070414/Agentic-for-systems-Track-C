@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import argparse
+import sys
+import os
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+from disassembler import disassemble_aecbin
+
+
+def main():
+    parser = argparse.ArgumentParser(description='AEC Object Disassembler')
+    parser.add_argument('input', help='Input AEC binary file')
+    args = parser.parse_args()
+
+    with open(args.input, 'rb') as f:
+        aecbin = f.read()
+
+    disassembly = disassemble_aecbin(aecbin)
+    print(disassembly)
+
+
+if __name__ == '__main__':
+    main()
